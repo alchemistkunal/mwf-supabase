@@ -1,8 +1,13 @@
 // notionApi.ts
-import { Credential } from './../model/credential';
+import { Player } from './../model/player';
 import { NotionPageWin } from './../model/notionPageWin';
 
 export class NotionApi {
+
+  private api_secret_key: String;
+  constructor(){
+    this.api_secret_key = Deno.env.get('NOTION_API_KEY_TEST');
+  }
 
    sanitizePageProperties(pageProperties: any): NotionPageWin {
     return {
@@ -24,8 +29,8 @@ export class NotionApi {
   }
   
 
-  async getDatabasePages(credential: Credential): Promise<NotionPageWin[]> {
-    const notionApiUrl = `https://api.notion.com/v1/databases/${credential.database_id}/query`; 
+  async getDatabasePages(player: Player): Promise<NotionPageWin[]> {
+    const notionApiUrl = `https://api.notion.com/v1/databases/${player.database_id}/query`; 
     const filter = {
       filter: {
           and: [
@@ -49,7 +54,8 @@ export class NotionApi {
       const response = await fetch(notionApiUrl, {
         method: "POST", // or any other HTTP method required
         headers: {
-          "Authorization": `Bearer ${credential.api_key}`,
+          // "Authorization": `Bearer ${player.api_secret_key}`,
+          "Authorization": `Bearer ${this.api_secret_key}`,
           "Notion-Version": "2022-06-28",
           // Add other required headers
         },
